@@ -43,7 +43,7 @@ app.get("/reset", async (req, res) => {
 
 app.post("/customers", async (req, res) => {
   const newCustomer = req.body;
-//   console.log(newCustomer);
+  //   console.log(newCustomer);
   if (newCustomer === null || req.body == {}) {
     res.status(400);
     res.send("missing request body");
@@ -90,5 +90,17 @@ app.put("/customers/:id", async (req, res) => {
       res.status(400);
       res.send(errMessage);
     }
+  }
+});
+
+app.delete("/customers/:id", async (req, res) => {
+  const id = req.params.id;
+  // return array [message, errMessage]
+  const [message, errMessage] = await da.deleteCustomerByID(id);
+  if (message) {
+    res.send(message);
+  } else {
+    res.status(404);
+    res.send(errMessage);
   }
 });

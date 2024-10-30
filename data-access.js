@@ -92,6 +92,25 @@ async function updateCustomer(updatedCustomer) {
   }
 }
 
+async function deleteCustomerByID(id) {
+  try {
+    const filter = { id: +id };
+    const deleteResult = await collection.deleteOne(filter);
+    if (deleteResult.deletedCount === 0) {
+      // return array [message, errMessage]
+      return [null, "no record deleted"];
+    } else if (deleteResult.deletedCount === 1) {
+      return ["one record deleted", null];
+    } else {
+      return [null, "error deleting records"];
+    }
+    return ["one record deleted", null];
+  } catch (err) {
+    console.log(err.message);
+    return [null, err.message];
+  }
+}
+
 dbStartup();
 module.exports = {
   getCustomers,
@@ -99,4 +118,5 @@ module.exports = {
   addCustomer,
   getCustomerById,
   updateCustomer,
+  deleteCustomerByID,
 };
