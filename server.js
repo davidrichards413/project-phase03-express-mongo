@@ -1,6 +1,6 @@
 // server.js file
 const express = require("express");
-const path = require("path"); // for handling file paths
+const path = require("path"); // for handling file path
 
 const app = express();
 const port = process.env.PORT || 4000; // use env var or default to 4000
