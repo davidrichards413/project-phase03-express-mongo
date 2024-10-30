@@ -2,9 +2,12 @@
 const express = require("express");
 const path = require("path"); // for handling file path
 const da = require("./data-access");
+const bodyParser = require("body-parser");
 
 const app = express();
 const port = process.env.PORT || 4000; // use env var or default to 4000
+
+app.use(bodyParser.json());
 
 // Set the static directory to serve files from
 //app.use(express.static(path.join(__dirname, "public")));
@@ -23,7 +26,7 @@ app.get("/customers", async (req, res) => {
   if (cust) {
     res.send(cust);
   } else {
-    res.status = 500;
+    res.status(500);
     res.send(err);
   }
 });
@@ -33,7 +36,28 @@ app.get("/reset", async (req, res) => {
   if (result) {
     res.send(result);
   } else {
-    res.status = 500;
+    res.status(500);
     res.send(err);
+  }
+});
+
+app.post("/customers", async (req, res) => {
+  const newCustomer = req.body;
+//   console.log(newCustomer);
+  if (newCustomer === null || req.body == {}) {
+    res.status(400);
+    res.send("missing request body");
+  } else {
+    // return array format [status, id, errMessage]
+    const [status, id, errMessage] = await da.addCustomer(newCustomer);
+    if (status === "success") {
+      res.status(201);
+      let response = { ...newCustomer };
+      response["_id"] = id;
+      res.send(response);
+    } else {
+      res.status(400);
+      res.send(errMessage);
+    }
   }
 });
