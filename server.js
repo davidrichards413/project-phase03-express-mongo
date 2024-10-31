@@ -11,9 +11,8 @@ const port = process.env.PORT || 4000; // use env var or default to 4000
 
 app.use(bodyParser.json());
 
-// Set the static directory to serve files from
+// Set the static directory to serve files from - THIS ISN'T WORKING
 //app.use(express.static(path.join(__dirname, "public")));
-// Set the static directory to serve files from
 const staticDir = path.join(__dirname, "public");
 // console.log(__dirname);
 // console.log(staticDir);
