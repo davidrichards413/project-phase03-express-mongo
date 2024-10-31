@@ -5,11 +5,15 @@ const express = require("express");
 const path = require("path"); // for handling file path
 const da = require("./data-access");
 const bodyParser = require("body-parser");
+const validation = require("./validation");
 
 const app = express();
 const port = process.env.PORT || 4000; // use env var or default to 4000
 
 app.use(bodyParser.json());
+
+//compare API key provided in request header to env variable in dotenv
+app.use(validation.apiValidation);
 
 // Set the static directory to serve files from - THIS ISN'T WORKING
 //app.use(express.static(path.join(__dirname, "public")));
@@ -20,18 +24,6 @@ app.use(express.static(staticDir));
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
-});
-
-//compare API key provided in request header to env variable in dotenv
-app.use((req, res, next) => {
-  const apiKey = req.get("x-api-key");
-  if (typeof apiKey === "undefined") {
-    res.status(401).send("API Key is missing");
-  } else if (apiKey != process.env.API_KEY) {
-    res.status(403).send("API Key is invalid");
-  } else {
-    next();
-  }
 });
 
 app.get("/customers", async (req, res) => {
