@@ -15,8 +15,6 @@ async function dbStartup() {
 async function getCustomers() {
   try {
     let customers = await collection.find().toArray();
-    // throw { message: "an error occured" };
-    // throw new Error("an error occured");
     return [customers, null];
   } catch (err) {
     console.log(err.message);
