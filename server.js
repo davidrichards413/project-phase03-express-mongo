@@ -19,37 +19,28 @@ const staticDir = path.join(__dirname, "public");
 // console.log(staticDir);
 app.use(express.static(staticDir));
 
-//Middleware to check API key
-// const authenticationMiddleware = (res, req, next) => {
-//   const apiKey = req.get("x-api-key"); //NOT WORKING
-//   console.log(`header key = ${apiKey}`); //remove this ASAP
-//   console.log(`env variable = ${process.env.API_KEY}`); //WORKS remove this ASAP
-
-//   if (!apiKey) {
-//     res.status(401); //NOT WORKING res.status is not a function
-//     res.send("API Key is missing");
-//   } else if (apiKey != process.env.API_KEY) {
-//     res.status(403).send("API Key is invalid");
-//   } else {
-//     //API Key is correct
-//     next();
-//   }
-// };
-
-// app.use(authenticationMiddleware);
-
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
 
-// app.get("/customers", authenticationMiddleware, async (req, res) => {
+//compare API key provided in request header to env variable in dotenv
+app.use((req, res, next) => {
+  const apiKey = req.get("x-api-key");
+  if (typeof apiKey === "undefined") {
+    res.status(401).send("API Key is missing");
+  } else if (apiKey != process.env.API_KEY) {
+    res.status(403).send("API Key is invalid");
+  } else {
+    next();
+  }
+});
+
 app.get("/customers", async (req, res) => {
   const [cust, err] = await da.getCustomers();
   if (cust) {
     res.send(cust);
   } else {
-    res.status(500);
-    res.send(err);
+    res.status(500).send(err);
   }
 });
 
@@ -65,7 +56,6 @@ app.get("/reset", async (req, res) => {
 
 app.post("/customers", async (req, res) => {
   const newCustomer = req.body;
-  //   console.log(newCustomer);
   if (newCustomer === null || req.body == {}) {
     res.status(400);
     res.send("missing request body");
@@ -86,7 +76,6 @@ app.post("/customers", async (req, res) => {
 
 app.get("/customers/:id", async (req, res) => {
   const id = req.params.id;
-  // return array [customer, errMessage]
   const [cust, err] = await da.getCustomerById(id);
   if (cust) {
     res.send(cust);
