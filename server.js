@@ -27,7 +27,6 @@ if (!apiKeyFromCmdLine && !apiKeyFromEnv) {
 }
 const app = express();
 const port = portFromCmdLine;
-// const port = process.env.PORT || 4000; // use env var or default to 4000
 
 app.use(bodyParser.json());
 

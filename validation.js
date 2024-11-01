@@ -3,10 +3,7 @@ function apiValidation(req, res, next) {
   const { env } = require("process");
   
   const userApiKey = process.argv[3] || process.env.API_KEY;
-  // console.log(`User API Key = ${userApiKey}`);
-
   const endpointApiKey = req.get("x-api-key");
-  // console.log(`Endpoint API Key = ${endpointApiKey}`);
 
   if (typeof endpointApiKey === "undefined") {
     res.status(401).send("Endpoint API Key is missing");

@@ -88,10 +88,9 @@ async function getCustomerQuery(id, name, email) {
   if (email) {
     query = { email: email };
   }
-  console.log(query);
+  // console.log(query);
   try {
     const customer = await collection.find(query).toArray();
-    // console.log(customer.length);
     // return array [customer, errMessage]
     if (customer.length === 0) {
       return [null, "no matching customers found"];
