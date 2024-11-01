@@ -77,6 +77,34 @@ async function getCustomerById(id) {
     return [null, err.message];
   }
 }
+async function getCustomerQuery(id, name, email) {
+  let query;
+  if (id) {
+    query = { id: +id };
+  }
+  if (name) {
+    query = { name: name };
+  }
+  if (email) {
+    query = { email: email };
+  }
+  console.log(query);
+  try {
+    const customer = await collection.find(query).toArray();
+    // console.log(customer.length);
+    // return array [customer, errMessage]
+    if (customer.length === 0) {
+      return [null, "no matching customers found"];
+    }
+    if (!customer) {
+      return [null, "invalid query"];
+    }
+    return [customer, null];
+  } catch (err) {
+    console.log(err.message);
+    return [null, err.message];
+  }
+}
 
 async function updateCustomer(updatedCustomer) {
   try {
@@ -118,4 +146,5 @@ module.exports = {
   getCustomerById,
   updateCustomer,
   deleteCustomerByID,
+  getCustomerQuery,
 };

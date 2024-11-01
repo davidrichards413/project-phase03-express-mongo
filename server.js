@@ -84,6 +84,24 @@ app.post("/customers", async (req, res) => {
   }
 });
 
+app.get("/customers/find", async (req, res) => {
+  let id = req.query.id;
+  let name = req.query.name;
+  let email = req.query.email;
+  if (!id && !name && !email) {
+    res.status(400).send("query string is required");
+  } else {
+    const [cust, err] = await da.getCustomerQuery(id, name, email);
+    if (cust) {
+      res.send(cust);
+    } else if (err === "no matching customers found") {
+      res.status(404).send(err);
+    } else {
+      res.status(500).send(err);
+    }
+  }
+});
+
 app.get("/customers/:id", async (req, res) => {
   const id = req.params.id;
   const [cust, err] = await da.getCustomerById(id);
