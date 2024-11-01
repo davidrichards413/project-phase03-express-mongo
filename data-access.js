@@ -1,7 +1,8 @@
 // data-access.js file
+require("dotenv").config();
 const MongoClient = require("mongodb").MongoClient;
-const dbName = "custdb";
-const baseUrl = "mongodb://127.0.0.1:27017";
+const dbName = process.env.MONGO_DBNAME;
+const baseUrl = process.env.MONGO_URL;
 const collectionName = "customers";
 const connectString = baseUrl + "/" + dbName;
 let collection;
