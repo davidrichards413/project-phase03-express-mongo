@@ -3,12 +3,31 @@ require("dotenv").config();
 
 const express = require("express");
 const path = require("path"); // for handling file path
-const da = require("./data-access");
 const bodyParser = require("body-parser");
+
+const da = require("./data-access");
 const validation = require("./validation");
 
+var portFromCmdLine = process.argv[2];
+var apiKeyFromCmdLine = process.argv[3];
+var apiKeyFromEnv = process.env.API_KEY;
+
+if (!portFromCmdLine) {
+  console.log("run this app with 1 or 2 arguments");
+  console.log("node server.js <port> <api-key>");
+  console.log("<api-key> is optional");
+  process.exit(1);
+}
+
+if (!apiKeyFromCmdLine && !apiKeyFromEnv) {
+  console.log(
+    "No API key has been provided. Please provide a key through the API_KEY env var or the command line"
+  );
+  process.exit(1);
+}
 const app = express();
-const port = process.env.PORT || 4000; // use env var or default to 4000
+const port = portFromCmdLine;
+// const port = process.env.PORT || 4000; // use env var or default to 4000
 
 app.use(bodyParser.json());
 

@@ -3,8 +3,8 @@ require("dotenv").config();
 const MongoClient = require("mongodb").MongoClient;
 const dbName = process.env.MONGO_DBNAME;
 const baseUrl = process.env.MONGO_URL;
-const collectionName = "customers";
 const connectString = baseUrl + "/" + dbName;
+const collectionName = "customers";
 let collection;
 
 async function dbStartup() {
